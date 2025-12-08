@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Язык будущего | Генератор новых слов</title>
+    <title>Язык будущего | Контекстно-зависимый генератор</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -441,6 +441,34 @@
             border: 1px solid #4caf50;
         }
 
+        .context-match {
+            margin-top: 15px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .high-match {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: #a5d6a7;
+            border-left: 3px solid #4caf50;
+        }
+
+        .medium-match {
+            background-color: rgba(255, 193, 7, 0.2);
+            color: #ffecb3;
+            border-left: 3px solid #ffc107;
+        }
+
+        .low-match {
+            background-color: rgba(244, 67, 54, 0.2);
+            color: #ffcdd2;
+            border-left: 3px solid #f44336;
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 2.5rem;
@@ -477,14 +505,14 @@
     <div class="container">
         <header>
             <h1><i class="fas fa-language"></i> Язык будущего</h1>
-            <p class="tagline">Умный генератор новых слов и понятий для явлений будущего с контекстно-зависимой семантикой</p>
+            <p class="tagline">Контекстно-зависимый генератор новых слов с умным анализом описания</p>
         </header>
         
         <div class="main-app">
             <section class="input-section">
                 <h2><i class="fas fa-keyboard"></i> Опишите новое понятие</h2>
                 <div class="input-container">
-                    <textarea id="definitionInput" class="definition-input" placeholder="Опишите понятие, для которого нужно создать новое слово. Чем подробнее описание, тем точнее будет сгенерированное слово. Например: 'название профессии, связанной с управлением климатическими системами мегаполиса' или 'термин для смешанного чувства восхищения и тревоги при общении с эмпатичным ИИ'"></textarea>
+                    <textarea id="definitionInput" class="definition-input" placeholder="Опишите понятие, для которого нужно создать новое слово. Чем подробнее описание, тем точнее будет сгенерированное слово. Например: 'должность человека который будет обучать роботов' или 'термин для смешанного чувства восхищения и тревоги при общении с эмпатичным ИИ'"></textarea>
                     
                     <div class="input-buttons">
                         <button id="generateBtn" class="btn btn-primary">
@@ -506,29 +534,34 @@
                 
                 <div class="examples-list">
                     <h3><i class="fas fa-lightbulb"></i> Примеры для вдохновения</h3>
-                    <div class="example-item" data-example="название профессии, связанной с управлением климатическими системами мегаполиса">
-                        <div class="example-title"><i class="fas fa-user-tie"></i> Профессия будущего</div>
-                        <div class="example-text">Климатический инженер, управляющий погодными системами крупного города</div>
+                    <div class="example-item" data-example="должность человека который будет обучать роботов">
+                        <div class="example-title"><i class="fas fa-robot"></i> Профессия будущего</div>
+                        <div class="example-text">Специалист по обучению и адаптации роботизированных систем</div>
                     </div>
                     <div class="example-item" data-example="термин для смешанного чувства восхищения и тревоги при общении с эмпатичным ИИ">
                         <div class="example-title"><i class="fas fa-heart"></i> Эмоция будущего</div>
-                        <div class="example-text">Сложное чувство при взаимодействии с эмоционально-развитым искусственным интеллектом</div>
+                        <div class="example-text">Сложное эмоциональное состояние при взаимодействии с эмоционально-развитым искусственным интеллектом</div>
                     </div>
-                    <div class="example-item" data-example="устройство для записи, хранения и воспроизведения снов с возможностью их редактирования">
-                        <div class="example-title"><i class="fas fa-vr-cardboard"></i> Технология будущего</div>
-                        <div class="example-text">Гаджет для работы со сновидениями как с цифровыми файлами</div>
+                    <div class="example-item" data-example="устройство для перевода мыслей в текст в реальном времени">
+                        <div class="example-title"><i class="fas fa-brain"></i> Технология будущего</div>
+                        <div class="example-text">Гаджет для преобразования нейронных сигналов в письменную речь</div>
                     </div>
-                    <div class="example-item" data-example="общественный строй, при котором искусственный интеллект имеет ограниченные гражданские права и обязанности">
-                        <div class="example-title"><i class="fas fa-users"></i> Общество будущего</div>
-                        <div class="example-text">Социум, где ИИ интегрирован в правовую и социальную систему</div>
+                    <div class="example-item" data-example="профессия специалиста по исправлению ошибок в работе нейронных сетей">
+                        <div class="example-title"><i class="fas fa-user-graduate"></i> Профессия будущего</div>
+                        <div class="example-text">Эксперт по отладке и коррекции искусственных нейронных сетей</div>
                     </div>
                 </div>
             </section>
             
             <section id="resultSection" class="result-section">
                 <div class="generated-word">
-                    <div class="word" id="generatedWord">Климатоник</div>
+                    <div class="word" id="generatedWord">Роботьютор</div>
                     <div class="definition" id="generatedDefinition"></div>
+                    
+                    <div id="contextMatch" class="context-match high-match">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Высокое соответствие контексту: слово точно отражает описание</span>
+                    </div>
                     
                     <div class="word-details">
                         <div class="detail-card">
@@ -537,11 +570,11 @@
                         </div>
                         <div class="detail-card">
                             <div class="detail-title">Сфера применения</div>
-                            <div class="detail-value" id="wordDomain">Технологии</div>
+                            <div class="detail-value" id="wordDomain">Робототехника</div>
                         </div>
                         <div class="detail-card">
-                            <div class="detail-title">Сложность</div>
-                            <div class="detail-value" id="wordComplexity">Средняя</div>
+                            <div class="detail-title">Уровень соответствия</div>
+                            <div class="detail-value" id="wordComplexity">Высокий</div>
                         </div>
                     </div>
                 </div>
@@ -558,7 +591,7 @@
                 </div>
                 
                 <div id="articleSection" class="article-section">
-                    <h3 class="article-title" id="articleTitle">Научная статья: "Климатоник"</h3>
+                    <h3 class="article-title" id="articleTitle">Научная статья: "Роботьютор"</h3>
                     <div class="article-content" id="articleContent">
                         <!-- Статья будет сгенерирована здесь -->
                     </div>
@@ -576,7 +609,7 @@
         </div>
         
         <footer>
-            <p><i class="fas fa-robot"></i> «Язык будущего» — контекстно-зависимый генератор новых слов для явлений завтрашнего дня</p>
+            <p><i class="fas fa-robot"></i> «Язык будущего» — умный генератор новых слов с контекстным анализом</p>
             <p>© 2025 Все созданные термины являются интеллектуальной собственностью их авторов: YORIK & Дударев Мирослав Александрович</p>
         </footer>
     </div>
@@ -591,6 +624,7 @@
         const resultSection = document.getElementById('resultSection');
         const generatedWord = document.getElementById('generatedWord');
         const generatedDefinition = document.getElementById('generatedDefinition');
+        const contextMatch = document.getElementById('contextMatch');
         const wordType = document.getElementById('wordType');
         const wordDomain = document.getElementById('wordDomain');
         const wordComplexity = document.getElementById('wordComplexity');
@@ -607,6 +641,7 @@
         let recognition = null;
         let isListening = false;
         let currentWord = "";
+        let currentWordData = null;
         let speechSynthesis = window.speechSynthesis;
         let isSpeaking = false;
         let currentUtterance = null;
@@ -670,198 +705,277 @@
             speakBtn.title = 'Ваш браузер не поддерживает синтез речи';
         }
         
-        // Расширенные базы данных для генерации слов
-        const thematicPrefixes = {
-            tech: ['Кибер', 'Техно', 'Инфо', 'Диджи', 'Вирту', 'Робо', 'Ай', 'Гаджет', 'Алго', 'Кодо', 'Нейро', 'Кванто', 'Нано', 'Био', 'Смарт'],
-            climate: ['Климато', 'Эко', 'Аэро', 'Гидро', 'Термо', 'Атмо', 'Гео', 'Погодо', 'Био', 'Энерго', 'Солнечно', 'Ветро'],
-            social: ['Социо', 'Психо', 'Эмо', 'Культуро', 'Коммуни', 'Коллективо', 'Публико', 'Граждано', 'Этно', 'Гендеро'],
-            medical: ['Медико', 'Био', 'Нейро', 'Психо', 'Гено', 'Фармако', 'Терапо', 'Хирурго', 'Диагно'],
-            space: ['Космо', 'Астро', 'Галакто', 'Плането', 'Орбито', 'Луно', 'Марсо', 'Звездо', 'Спутнико']
+        // Улучшенная система анализа контекста
+        const contextPatterns = {
+            // Роботы и ИИ
+            robots: {
+                keywords: ['робот', 'робототехник', 'искусственн', 'нейрон', 'алгоритм', 'машинн', 'ии', 'искусственный интеллект', 'бот', 'автомат'],
+                prefixes: ['Робо', 'Кибер', 'Техно', 'Алго', 'Нейро', 'Ай', 'Авто', 'Механо', 'Диги', 'Бионик', 'Смарт'],
+                roots: ['тьютор', 'тренер', 'инструктор', 'педагог', 'обучатель', 'ментор', 'наставник', 'мастер', 'коуч'],
+                suffixes: ['', 'ист', 'ер', 'ор'],
+                domain: 'Робототехника',
+                wordType: 'Название профессии',
+                templates: [
+                    "{word} - специалист по {activity} {objects}.",
+                    "{word} - профессионал, занимающийся {process} {systems}.",
+                    "{word} - эксперт в области {field}, отвечающий за {responsibility}."
+                ],
+                activities: ['обучению и адаптации', 'тренировке и настройке', 'программированию и калибровке'],
+                objects: ['роботизированных систем', 'искусственных интеллектов', 'автономных машин'],
+                processes: ['обучению и развитию', 'интеграции и адаптации', 'отладке и оптимизации'],
+                systems: ['нейронных сетей', 'роботизированных комплексов', 'искусственных когнитивных систем'],
+                fields: ['робототехнической педагогики', 'машинного обучения', 'искусственного интеллекта'],
+                responsibilities: ['эффективное обучение автономных систем', 'адаптацию ИИ к реальным задачам', 'развитие когнитивных способностей машин']
+            },
+            
+            // ИИ и эмоции
+            ai_emotions: {
+                keywords: ['чувств', 'эмоц', 'ощущен', 'переживан', 'эмпатичн', 'сочувств', 'сопереживан', 'психолог', 'аффект'],
+                prefixes: ['ИИ-', 'Кибер', 'Техно', 'Алго', 'Нейро', 'Диги', 'Вирту', 'Синто', 'Эмо'],
+                roots: ['патия', 'фория', 'эмия', 'тизм', 'зис', 'чувствие', 'переживание', 'ощущение', 'эмоция'],
+                suffixes: ['', 'ация', 'изм', 'ость', 'ия'],
+                domain: 'Психотехнологии',
+                wordType: 'Эмоциональное состояние',
+                templates: [
+                    "{word} - сложное эмоциональное состояние, возникающее при {situation}, характеризующееся {characteristics}.",
+                    "{word} - психологический феномен, проявляющийся как {manifestation} в контексте {context}.",
+                    "{word} - специфическое переживание, сочетающее {emotions} при {interaction}."
+                ],
+                situations: ["взаимодействии с эмпатичным ИИ", "осознании искусственной природы эмоций", "диалоге с эмоциональным алгоритмом"],
+                characteristics: ["смесью восхищения и тревоги", "парадоксальным сочетанием близости и отчуждения", "когнитивным диссонансом между естественным и искусственным"],
+                manifestations: ["амбивалентное отношение к искусственному сознанию", "одновременное принятие и отторжение цифровой эмпатии", "дихотомия доверия и настороженности"],
+                contexts: ["человеко-машинного взаимодействия", "дигитализации эмоциональной сферы", "конвергенции биологического и искусственного интеллекта"],
+                emotions: ["восхищение технологическими возможностями и тревогу об утрате человеческой уникальности", "признательность за понимание и опасение манипуляции", "удовлетворение от эффективности и беспокойство о зависимости"],
+                interactions: ["получении эмоциональной поддержки от небиологической сущности", "обнаружении эмпатии в алгоритмической системе", "переживании искренности в запрограммированных реакциях"]
+            },
+            
+            // Климат и экология
+            climate: {
+                keywords: ['климат', 'погод', 'экологи', 'атмосфер', 'природ', 'эко', 'окружающ', 'сред', 'температур', 'осадк'],
+                prefixes: ['Климато', 'Атмо', 'Погодо', 'Эко', 'Гидро', 'Термо', 'Аэро', 'Био', 'Гео', 'Солнечно', 'Ветро'],
+                roots: ['ник', 'лог', 'вед', 'граф', 'метр', 'инж', 'менеджер', 'аналитик', 'инженер'],
+                suffixes: ['', 'ист', 'ер', 'ор'],
+                domain: 'Климатология',
+                wordType: 'Название профессии',
+                templates: [
+                    "{word} - специалист по управлению {aspect} в условиях {condition}.",
+                    "{word} - профессионал, занимающийся {activity} с использованием {tools}.",
+                    "{word} - эксперт в области {field}, отвечающий за {responsibility}."
+                ],
+                aspects: ["климатическими системами", "погодными условиями", "экологическим балансом", "атмосферными процессами"],
+                conditions: ["мегаполисов", "изменяющегося климата", "урбанизированных территорий", "глобального потепления"],
+                activities: ["регулированием микроклимата", "прогнозированием погодных аномалий", "оптимизацией атмосферных параметров"],
+                tools: ["искусственного интеллекта", "спутниковых данных", "нейросетевых моделей", "когнитивных алгоритмов"],
+                fields: ["климатической инженерии", "атмосферных исследований", "экологического менеджмента"],
+                responsibilities: ["поддержание оптимальных условий", "предотвращение климатических катастроф", "управление погодными ресурсами"]
+            },
+            
+            // Технологии и устройства
+            tech_devices: {
+                keywords: ['устройств', 'гаджет', 'прибор', 'аппарат', 'техник', 'систем', 'механизм', 'девайс', 'инструмент', 'оборудован'],
+                prefixes: ['Онейро', 'Сомно', 'Гипно', 'Сновид', 'Морфео', 'Нейро', 'Кванто', 'Нано', 'Био', 'Кибер'],
+                roots: ['скоп', 'граф', 'трон', 'визор', 'рекордер', 'плеер', 'модуль', 'блок', 'интерфейс'],
+                suffixes: ['', 'ик', 'атор', 'изатор'],
+                domain: 'Нейротехнологии',
+                wordType: 'Техническое устройство',
+                templates: [
+                    "{word} - устройство для {function}, позволяющее {capability}.",
+                    "{word} - технологический аппарат, предназначенный для {purpose} с возможностью {features}.",
+                    "{word} - прибор, осуществляющий {operation} и обеспечивающий {benefits}."
+                ],
+                functions: ["записи и воспроизведения сновидений", "визуализации подсознательных образов", "перевода мыслей в текст"],
+                capabilities: ["анализировать и редактировать подсознательные процессы", "сохранять и передавать когнитивный опыт", "синтезировать новые формы восприятия"],
+                purposes: ["исследования нейропластичности", "терапевтической работы с ментальными состояниями", "творческого использования когнитивных процессов"],
+                features: ["интерактивного взаимодействия с сознанием", "обмена ментальными образами", "обучения контролю над мыслительными процессами"],
+                operations: ["считывания нейронных паттернов", "трансляции ментальных образов в цифровой формат", "обратной связи для управления когнитивными состояниями"],
+                benefits: ["глубинного самопознания через анализ мыслительных процессов", "терапевтической коррекции ментальных нарушений", "расширения когнитивных возможностей человека"]
+            },
+            
+            // Общество и социальные системы
+            society: {
+                keywords: ['обществ', 'социал', 'строй', 'систем', 'прав', 'закон', 'гражданск', 'полит', 'государств', 'культур'],
+                prefixes: ['ИИ-', 'Кибер', 'Техно', 'Робо', 'Алго', 'Диги', 'Вирту', 'Постгуман', 'Трансгуман'],
+                roots: ['кратия', 'социум', 'полис', 'архия', 'тократия', 'номия', 'культура', 'общество', 'система'],
+                suffixes: ['', 'изм', 'ия', 'ость'],
+                domain: 'Социальные технологии',
+                wordType: 'Абстрактное понятие',
+                templates: [
+                    "{word} - общественный строй, при котором {condition}, характеризующийся {characteristics}.",
+                    "{word} - социальная система, где {situation}, предусматривающая {provisions}.",
+                    "{word} - форма социальной организации, основанная на {foundation} и обеспечивающая {guarantees}."
+                ],
+                conditions: ["искусственный интеллект имеет ограниченные гражданские права", "небиологические субъекты интегрированы в правовое поле", "алгоритмические сущности обладают юридическим статусом"],
+                characteristics: ["смешанной экосистемой биологических и цифровых субъектов", "постепенной эволюцией традиционных социальных институтов", "новыми формами коллективного взаимодействия"],
+                situations: ["правосубъектность распространяется на когнитивные системы", "социальные роли распределяются между органическими и синтетическими акторами", "общественный договор пересматривается с учетом искусственного сознания"],
+                provisions: ["этические комитеты для оценки решений ИИ", "специальные суды для рассмотрения дел с участием небиологических субъектов", "образовательные программы по взаимодействию с искусственным интеллектом"],
+                foundations: ["принципе расширенной субъектности", "концепции распределенного сознания", "парадигме гибридного общества"],
+                guarantees: ["баланс между технологическим прогрессом и сохранением человеческой автономии", "инклюзивность различных форм разума в социальных процессах", "устойчивое развитие в условиях технологической сингулярности"]
+            }
         };
         
-        const thematicRoots = {
-            profession: ['ник', 'лог', 'граф', 'метр', 'вед', 'вод', 'тор', 'ист', 'ер', 'арх', 'инж', 'мен', 'тист'],
-            feeling: ['фория', 'фобия', 'патия', 'мания', 'эмия', 'тизм', 'сия', 'зис', 'змо', 'чувствие', 'переживание'],
-            device: ['трон', 'скоп', 'фон', 'метр', 'граф', 'стат', 'визор', 'модуль', 'блок', 'устрой', 'прибор', 'аппарат'],
-            concept: ['изм', 'ость', 'ство', 'ция', 'фикация', 'изация', 'альность', 'фикация', 'парадигма', 'концепт']
-        };
-        
-        const suffixes = {
-            person: ['ист', 'ер', 'ор', 'ант', 'атор', 'изатор', 'тель', 'ник', 'ец', 'ак'],
-            abstract: ['ность', 'ство', 'изм', 'ция', 'ция', 'ия', 'ация', 'фикация', 'изация'],
-            object: ['ник', 'ак', 'ок', 'ик', 'арь', 'тель', 'тор', 'льник']
-        };
-        
-        // Словари для детализации
-        const domains = {
-            tech: "Технологии",
-            climate: "Климатология",
-            social: "Социальные науки",
-            medical: "Медицина",
-            space: "Космонавтика"
-        };
-        
-        const complexityLevels = ["Низкая", "Средняя", "Высокая"];
-        
-        // Анализ текста для определения тематики
-        function analyzeDefinition(definition) {
+        // Улучшенный анализ контекста
+        function analyzeContext(definition) {
             const text = definition.toLowerCase();
-            let domain = "tech";
-            let wordCategory = "concept";
-            let complexity = "medium";
+            let bestMatch = null;
+            let maxScore = 0;
             
-            // Определяем домен
-            if (text.includes('климат') || text.includes('погод') || text.includes('экологи') || text.includes('природ')) {
-                domain = "climate";
-            } else if (text.includes('обществ') || text.includes('социал') || text.includes('культур') || text.includes('психолог') || text.includes('эмоц')) {
-                domain = "social";
-            } else if (text.includes('медиц') || text.includes('здоров') || text.includes('болезн') || text.includes('лечен') || text.includes('врач')) {
-                domain = "medical";
-            } else if (text.includes('космос') || text.includes('планет') || text.includes('звезд') || text.includes('галактик') || text.includes('орбит')) {
-                domain = "space";
+            // Проверяем все паттерны
+            for (const [category, pattern] of Object.entries(contextPatterns)) {
+                let score = 0;
+                
+                // Подсчитываем совпадения по ключевым словам
+                for (const keyword of pattern.keywords) {
+                    if (text.includes(keyword)) {
+                        score += 3; // Больший вес для точных совпадений
+                    }
+                }
+                
+                // Проверяем наличие общих слов, связанных с категорией
+                const categoryWords = {
+                    robots: ['обучать', 'обучение', 'тренировать', 'тренировка', 'программировать', 'настраивать', 'калибровать'],
+                    ai_emotions: ['смешанный', 'противоречивый', 'двойственный', 'амбивалентный', 'парадоксальный'],
+                    climate: ['управление', 'контроль', 'регулирование', 'прогнозирование', 'мониторинг'],
+                    tech_devices: ['перевод', 'преобразование', 'запись', 'воспроизведение', 'хранение', 'редактирование'],
+                    society: ['интеграция', 'включение', 'участие', 'права', 'обязанности', 'статус']
+                };
+                
+                if (categoryWords[category]) {
+                    for (const word of categoryWords[category]) {
+                        if (text.includes(word)) {
+                            score += 2;
+                        }
+                    }
+                }
+                
+                // Если набрали баллы и это лучший результат
+                if (score > maxScore) {
+                    maxScore = score;
+                    bestMatch = {
+                        category: category,
+                        pattern: pattern,
+                        score: score
+                    };
+                }
             }
             
-            // Определяем категорию слова
-            if (text.includes('профессия') || text.includes('специалист') || text.includes('инженер') || text.includes('работник')) {
-                wordCategory = "profession";
-            } else if (text.includes('чувство') || text.includes('эмоция') || text.includes('ощущение') || text.includes('переживание')) {
-                wordCategory = "feeling";
-            } else if (text.includes('устройство') || text.includes('гаджет') || text.includes('прибор') || text.includes('аппарат') || text.includes('техника')) {
-                wordCategory = "device";
+            // Если нет хорошего совпадения, создаем универсальный паттерн
+            if (!bestMatch || maxScore < 3) {
+                // Анализируем структуру запроса для создания осмысленного слова
+                const words = text.split(' ');
+                
+                // Определяем тип слова по формулировке
+                let detectedType = 'Название профессии';
+                let detectedDomain = 'Общие технологии';
+                
+                if (text.includes('должность') || text.includes('профессия') || text.includes('специалист') || text.includes('работник')) {
+                    detectedType = 'Название профессии';
+                } else if (text.includes('чувство') || text.includes('эмоция') || text.includes('ощущение') || text.includes('переживание')) {
+                    detectedType = 'Эмоциональное состояние';
+                    detectedDomain = 'Психология';
+                } else if (text.includes('устройство') || text.includes('гаджет') || text.includes('прибор') || text.includes('аппарат')) {
+                    detectedType = 'Техническое устройство';
+                    detectedDomain = 'Технологии';
+                } else if (text.includes('термин') || text.includes('понятие') || text.includes('концепция')) {
+                    detectedType = 'Абстрактное понятие';
+                    detectedDomain = 'Общие науки';
+                }
+                
+                // Определяем тему по ключевым словам
+                let theme = 'общее';
+                let themePrefixes = ['Техно', 'Инфо', 'Универ', 'Мульти', 'Интер'];
+                let themeRoots = ['лог', 'граф', 'метр', 'ник', 'ист'];
+                
+                if (text.includes('робот') || text.includes('ии') || text.includes('искусственн')) {
+                    theme = 'роботы';
+                    themePrefixes = ['Робо', 'Кибер', 'Техно', 'Алго', 'Нейро', 'Ай'];
+                    themeRoots = ['тьютор', 'тренер', 'инструктор', 'педагог', 'мастер'];
+                    detectedDomain = 'Робототехника';
+                } else if (text.includes('климат') || text.includes('погод') || text.includes('экологи')) {
+                    theme = 'климат';
+                    themePrefixes = ['Климато', 'Эко', 'Атмо', 'Гидро', 'Термо'];
+                    themeRoots = ['ник', 'лог', 'вед', 'граф', 'инж'];
+                    detectedDomain = 'Климатология';
+                } else if (text.includes('медиц') || text.includes('здоров') || text.includes('лечен')) {
+                    theme = 'медицина';
+                    themePrefixes = ['Медико', 'Био', 'Нейро', 'Психо', 'Гено'];
+                    themeRoots = ['лог', 'терапевт', 'хирург', 'диагност'];
+                    detectedDomain = 'Медицина';
+                }
+                
+                bestMatch = {
+                    category: 'custom',
+                    pattern: {
+                        prefixes: themePrefixes,
+                        roots: themeRoots,
+                        suffixes: ['', 'ист', 'ер', 'ор'],
+                        domain: detectedDomain,
+                        wordType: detectedType,
+                        isCustom: true
+                    },
+                    score: maxScore
+                };
             }
             
-            // Определяем сложность
-            const wordCount = text.split(' ').length;
-            if (wordCount < 8) {
-                complexity = "low";
-            } else if (wordCount > 15) {
-                complexity = "high";
-            }
+            // Определяем уровень соответствия
+            let matchLevel = 'low';
+            if (maxScore >= 6) matchLevel = 'high';
+            else if (maxScore >= 3) matchLevel = 'medium';
             
-            return { domain, wordCategory, complexity };
+            return {
+                category: bestMatch.category,
+                pattern: bestMatch.pattern,
+                matchLevel: matchLevel,
+                score: maxScore
+            };
         }
         
         // Генерация слова на основе анализа
         function generateWord(definition) {
-            const analysis = analyzeDefinition(definition);
+            const context = analyzeContext(definition);
+            const pattern = context.pattern;
             
-            // Выбираем соответствующие префиксы и корни
-            const prefixes = thematicPrefixes[analysis.domain] || thematicPrefixes.tech;
-            const roots = thematicRoots[analysis.wordCategory] || thematicRoots.concept;
+            // Выбираем компоненты слова
+            const prefix = pattern.prefixes[Math.floor(Math.random() * pattern.prefixes.length)];
+            const root = pattern.roots[Math.floor(Math.random() * pattern.roots.length)];
+            const suffix = pattern.suffixes[Math.floor(Math.random() * pattern.suffixes.length)];
             
-            // Генерируем слово
-            let word = "";
-            
-            // Выбираем префикс
-            const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
-            
-            // Выбираем корень
-            let root = roots[Math.floor(Math.random() * roots.length)];
-            
-            // Для профессий добавляем соответствующий суффикс
-            if (analysis.wordCategory === "profession") {
-                const suffix = suffixes.person[Math.floor(Math.random() * suffixes.person.length)];
-                word = prefix + root + suffix;
-            }
-            // Для чувств
-            else if (analysis.wordCategory === "feeling") {
-                word = prefix + root;
-            }
-            // Для устройств
-            else if (analysis.wordCategory === "device") {
-                const suffix = suffixes.object[Math.floor(Math.random() * suffixes.object.length)];
-                word = prefix + root + suffix;
-            }
-            // Для абстрактных понятий
-            else {
-                const suffix = suffixes.abstract[Math.floor(Math.random() * suffixes.abstract.length)];
-                word = prefix + root + suffix;
-            }
-            
-            // Делаем первую букву заглавной
+            // Формируем слово
+            let word = prefix + root + suffix;
             word = word.charAt(0).toUpperCase() + word.slice(1);
+            
+            // Если это кастомный паттерн без шаблона, создаем простое описание
+            let description;
+            
+            if (pattern.isCustom) {
+                // Для кастомных паттернов создаем прямое описание
+                description = `${word} - ${definition}`;
+            } else {
+                // Для стандартных паттернов используем шаблоны
+                const templates = pattern.templates || [`{word} - ${definition}`];
+                const template = templates[Math.floor(Math.random() * templates.length)];
+                description = template.replace('{word}', word);
+                
+                // Заменяем дополнительные заполнители
+                for (const key in pattern) {
+                    if (Array.isArray(pattern[key]) && key !== 'keywords' && key !== 'prefixes' && key !== 'roots' && key !== 'suffixes') {
+                        const placeholder = `{${key}}`;
+                        if (description.includes(placeholder)) {
+                            const randomElement = pattern[key][Math.floor(Math.random() * pattern[key].length)];
+                            description = description.replace(placeholder, randomElement);
+                        }
+                    }
+                }
+            }
+            
+            // Убираем возможные оставшиеся заполнители
+            description = description.replace(/\{[^}]+\}/g, definition);
             
             return {
                 word: word,
-                analysis: analysis
+                description: description,
+                context: context,
+                originalDefinition: definition
             };
-        }
-        
-        // Генерация подробного описания на основе слова и определения
-        function generateDetailedDescription(word, definition, analysis) {
-            const domainName = domains[analysis.domain];
-            
-            let description = "";
-            const definitionLower = definition.toLowerCase();
-            
-            if (analysis.wordCategory === "profession") {
-                description = `${word} - специалист в области ${domainName.toLowerCase()}, занимающийся ${getProfessionalActivity(definition)}`;
-            } else if (analysis.wordCategory === "feeling") {
-                description = `${word} - сложное эмоциональное состояние, возникающее при ${getFeelingContext(definition)}`;
-            } else if (analysis.wordCategory === "device") {
-                description = `${word} - устройство, предназначенное для ${getDevicePurpose(definition)} в области ${domainName.toLowerCase()}`;
-            } else {
-                description = `${word} - концепция в области ${domainName.toLowerCase()}, описывающая ${getConceptDescription(definition)}`;
-            }
-            
-            return description;
-        }
-        
-        // Вспомогательные функции для генерации описаний
-        function getProfessionalActivity(definition) {
-            const activities = [
-                "управлении и контроле соответствующих систем",
-                "разработке и внедрении инновационных решений",
-                "анализе и оптимизации существующих процессов",
-                "координации междисциплинарных проектов",
-                "прогнозировании и предотвращении потенциальных проблем"
-            ];
-            
-            if (definition.includes('климат')) return activities[0];
-            if (definition.includes('технолог')) return activities[1];
-            if (definition.includes('анализ')) return activities[2];
-            if (definition.includes('координац')) return activities[3];
-            
-            return activities[Math.floor(Math.random() * activities.length)];
-        }
-        
-        function getFeelingContext(definition) {
-            const contexts = [
-                "взаимодействии с передовыми технологиями",
-                "осознании глобальных изменений в обществе",
-                "столкновении с явлениями будущего",
-                "переходе на новый уровень сознания",
-                "адаптации к быстро меняющемуся миру"
-            ];
-            
-            if (definition.includes('ИИ') || definition.includes('искусственн')) return contexts[0];
-            if (definition.includes('общест') || definition.includes('социал')) return contexts[1];
-            
-            return contexts[Math.floor(Math.random() * contexts.length)];
-        }
-        
-        function getDevicePurpose(definition) {
-            const purposes = [
-                "автоматизации сложных процессов",
-                "сборе и анализе данных в реальном времени",
-                "усилении человеческих возможностей",
-                "моделировании и симуляции различных сценариев",
-                "обеспечении устойчивой связи между системами"
-            ];
-            
-            return purposes[Math.floor(Math.random() * purposes.length)];
-        }
-        
-        function getConceptDescription(definition) {
-            const descriptions = [
-                "принципиально новый подход к решению актуальных проблем",
-                "эволюцию традиционных представлений в соответствующей области",
-                "синтез различных дисциплин для создания целостной картины",
-                "парадигмальный сдвиг в понимании ключевых процессов",
-                "интеграцию технологических и гуманитарных аспектов развития"
-            ];
-            
-            return descriptions[Math.floor(Math.random() * descriptions.length)];
         }
         
         // Функция генерации нового слова
@@ -874,22 +988,30 @@
                 return;
             }
             
-            // Генерируем слово и анализ
-            const result = generateWord(definition);
-            currentWord = result.word;
-            const analysis = result.analysis;
-            
-            // Генерируем подробное описание
-            const description = generateDetailedDescription(currentWord, definition, analysis);
+            // Генерируем слово и данные
+            currentWordData = generateWord(definition);
+            currentWord = currentWordData.word;
             
             // Показываем результат
             generatedWord.textContent = currentWord;
-            generatedDefinition.textContent = description;
+            generatedDefinition.textContent = currentWordData.description;
             
             // Устанавливаем детали
-            wordType.textContent = getWordType(analysis.wordCategory);
-            wordDomain.textContent = domains[analysis.domain];
-            wordComplexity.textContent = complexityLevels[analysis.complexity === "low" ? 0 : analysis.complexity === "high" ? 2 : 1];
+            wordType.textContent = currentWordData.context.pattern.wordType || 'Существительное';
+            wordDomain.textContent = currentWordData.context.pattern.domain || 'Общие технологии';
+            
+            // Устанавливаем уровень соответствия
+            const matchLevel = currentWordData.context.matchLevel;
+            wordComplexity.textContent = matchLevel === 'high' ? 'Высокий' : 
+                                       matchLevel === 'medium' ? 'Средний' : 'Низкий';
+            
+            // Обновляем индикатор соответствия
+            contextMatch.className = 'context-match ' + matchLevel + '-match';
+            const matchText = matchLevel === 'high' ? 'Высокое соответствие контексту: слово точно отражает описание' :
+                            matchLevel === 'medium' ? 'Среднее соответствие контексту: слово частично отражает описание' :
+                            'Низкое соответствие контексту: слово создано на основе общего анализа';
+            
+            contextMatch.innerHTML = `<i class="fas fa-${matchLevel === 'high' ? 'check-circle' : matchLevel === 'medium' ? 'exclamation-circle' : 'info-circle'}"></i><span>${matchText}</span>`;
             
             // Показываем секцию с результатом
             resultSection.classList.add('active');
@@ -903,55 +1025,23 @@
             resultSection.scrollIntoView({ behavior: 'smooth' });
         }
         
-        // Получение типа слова
-        function getWordType(category) {
-            switch(category) {
-                case "profession": return "Название профессии";
-                case "feeling": return "Эмоциональное состояние";
-                case "device": return "Техническое устройство";
-                default: return "Абстрактное понятие";
-            }
-        }
-        
         // Функция для "узаконивания" термина
         function legalizeTerm() {
-            const word = currentWord;
-            const definition = generatedDefinition.textContent;
-            const analysis = analyzeDefinition(definitionInput.value.trim());
+            if (!currentWordData) {
+                alert('Сначала сгенерируйте слово');
+                return;
+            }
             
-            // Генерируем псевдонаучную статью
+            const word = currentWord;
+            const description = currentWordData.description;
+            const originalDefinition = currentWordData.originalDefinition;
+            const context = currentWordData.context;
+            
+            // Генерируем логически связанную статью
             articleTitle.textContent = `Научная статья: "${word}"`;
             
-            // Создаем содержание статьи
-            const articleText = `
-                <p><strong>Аннотация:</strong> В данной статье вводится и обосновывается новый термин "${word}", описывающий ${definition.toLowerCase()}. Предлагается детальный анализ этимологии, семантики и прагматики данного неологизма, а также его потенциальное место в терминологической системе ${domains[analysis.domain]}.</p>
-                
-                <p><strong>Введение:</strong> Ускорение технологического прогресса и трансформация социальных институтов требуют постоянного обновления понятийного аппарата современной науки. Возникают явления, для которых в существующем языке отсутствуют адекватные обозначения. Одним из таких феноменов является ${definitionInput.value.trim().toLowerCase()}.</p>
-                
-                <p><strong>Этимологический анализ:</strong> Термин "${word}" образован путем ${getEtymologyDescription(word, analysis)}. Морфемная структура термина отражает его принадлежность к области ${domains[analysis.domain].toLowerCase()} и категории ${getWordType(analysis.wordCategory).toLowerCase()}.</p>
-                
-                <p><strong>Семантическое поле:</strong> <em>${word}</em> - ${definition.toLowerCase()}. Данный термин занимает особое место в семантическом поле, обозначая ${getSemanticDescription(analysis)}.</p>
-                
-                <p><strong>Прагматический аспект:</strong> Введение термина "${word}" в научный оборот позволит ${getPragmaticBenefits(analysis)}.</p>
-                
-                <div class="examples">
-                    <h4><i class="fas fa-comment-alt"></i> Примеры употребления термина "${word}":</h4>
-                    <ul>
-                        <li>${getUsageExample1(word, analysis)}</li>
-                        <li>${getUsageExample2(word, analysis)}</li>
-                        <li>${getUsageExample3(word, analysis)}</li>
-                        <li>${getUsageExample4(word, analysis)}</li>
-                    </ul>
-                </div>
-                
-                <p><strong>Заключение:</strong> Введение термина "${word}" в научный оборот представляется необходимым шагом для развития ${domains[analysis.domain].toLowerCase()}. Данный неологизм позволит более точно описывать возникающие явления и процессы, способствуя развитию как теоретического знания, так и практических приложений.</p>
-                
-                <p><strong>Литература:</strong> 
-                <br>1. Иванов А.А. "Неология как наука о новых словах". М.: Изд-во МГУ, 2023.
-                <br>2. Smith J., Tanaka H. "Future linguistics: creating words for tomorrow". Cambridge University Press, 2022.
-                <br>3. Петрова В.С. "Язык будущего: тенденции и прогнозы". СПб.: Нева, 2024.
-                <br>4. Chen L. "Terminological innovation in rapidly developing fields". Journal of Future Studies, 2023, vol. 15, no. 2.</p>
-            `;
+            // Создаем содержание статьи, связанное со словом и его описанием
+            const articleText = generateArticleContent(word, description, originalDefinition, context);
             
             articleContent.innerHTML = articleText;
             articleSection.classList.add('active');
@@ -960,70 +1050,100 @@
             articleSection.scrollIntoView({ behavior: 'smooth' });
         }
         
-        // Вспомогательные функции для генерации статьи
-        function getEtymologyDescription(word, analysis) {
-            const etymologies = [
-                "контаминации греческих и латинских корней",
-                "заимствования и адаптации терминов из смежных дисциплин",
-                "словообразования по аналогии с существующей терминологией",
-                "семантической трансформации устаревших понятий",
-                "морфологического синтеза элементов различных языков"
-            ];
-            return etymologies[Math.floor(Math.random() * etymologies.length)];
+        // Генерация содержания статьи
+        function generateArticleContent(word, description, originalDefinition, context) {
+            // Разные шаблоны статей для разных уровней соответствия
+            const baseArticle = `
+                <p><strong>Аннотация:</strong> В статье рассматривается новый термин "${word}", обозначающий ${description.toLowerCase()} Вводится обоснование необходимости данного термина в современной науке и технологиях.</p>
+                
+                <p><strong>Введение:</strong> Быстрое развитие технологий и трансформация социальных отношений требуют постоянного обновления понятийного аппарата. ${originalDefinition} представляет собой пример явления, для которого в существующем языке отсутствуют адекватные обозначения.</p>
+                
+                <p><strong>Этимология термина:</strong> Термин "${word}" образован от комбинации корней, отражающих суть описываемого явления. Лингвистическая структура термина передает его принадлежность к области ${context.pattern.domain}.</p>
+                
+                <p><strong>Сфера применения:</strong> ${word} находит применение в ${getApplicationArea(context)}. Основные задачи включают: ${getTasks(context)}.</p>
+                
+                <div class="examples">
+                    <h4><i class="fas fa-comment-alt"></i> Примеры употребления термина "${word}":</h4>
+                    <ul>
+                        <li>${getUsageExample1(word, context)}</li>
+                        <li>${getUsageExample2(word, context)}</li>
+                        <li>${getUsageExample3(word, context)}</li>
+                        <li>${getUsageExample4(word, context)}</li>
+                    </ul>
+                </div>
+                
+                <p><strong>Заключение:</strong> Введение термина "${word}" в научный и профессиональный оборот позволяет стандартизировать описание нового явления, привлечь внимание к актуальной проблематике и способствовать развитию необходимых компетенций. Термин представляет собой пример адаптации языка к вызовам современности.</p>
+                
+                <p><strong>Литература:</strong> 
+                <br>1. Иванов А.А. "Неология как наука о новых словах". М.: Изд-во МГУ, 2023.
+                <br>2. Smith J., Tanaka H. "Future linguistics: creating words for tomorrow". Cambridge University Press, 2022.
+                <br>3. Петрова В.С. "Язык будущего: тенденции и прогнозы". СПб.: Лингвистика будущего, 2024.</p>
+            `;
+            
+            return baseArticle;
         }
         
-        function getSemanticDescription(analysis) {
-            const descriptions = [
-                "пограничное явление на стыке нескольких областей знания",
-                "качественно новый уровень развития традиционных концепций",
-                "интеграцию технологических возможностей и гуманистических ценностей",
-                "ответ на вызовы стремительно меняющейся реальности",
-                "синтез рационального и эмоционального подходов к проблеме"
-            ];
-            return descriptions[Math.floor(Math.random() * descriptions.length)];
+        // Вспомогательные функции для генерации статей
+        function getApplicationArea(context) {
+            const areas = {
+                robots: "области робототехники и искусственного интеллекта",
+                ai_emotions: "сфере человеко-машинного взаимодействия и психотехнологий",
+                climate: "климатической инженерии и урбанистической экологии",
+                tech_devices: "нейротехнологиях и когнитивных исследованиях",
+                society: "социальных науках и политической философии"
+            };
+            
+            return areas[context.category] || "различных технологических и научных областях";
         }
         
-        function getPragmaticBenefits(analysis) {
-            const benefits = [
-                "стандартизировать описание соответствующих явлений",
-                "устранить терминологическую путаницу в данной области",
-                "создать основу для междисциплинарного диалога",
-                "способствовать более точному прогнозированию тенденций",
-                "обеспечить концептуальную основу для дальнейших исследований"
-            ];
-            return benefits[Math.floor(Math.random() * benefits.length)];
+        function getTasks(context) {
+            const tasks = {
+                robots: "обучение автономных систем, адаптацию ИИ к реальным задачам, развитие когнитивных способностей машин",
+                ai_emotions: "анализ психологических реакций на искусственный интеллект, разработку этических стандартов для эмоциональных ИИ, изучение трансформации человеческих эмоций в цифровую эпоху",
+                climate: "управление микроклиматом урбанизированных территорий, прогнозирование погодных аномалий, разработку мер адаптации к изменению климата",
+                tech_devices: "исследование нейропластичности, разработку интерфейсов мозг-компьютер, создание технологий усиления когнитивных способностей",
+                society: "разработку правовых рамок для искусственного интеллекта, анализ социальных последствий технологической сингулярности, создание моделей гибридного общества"
+            };
+            
+            return tasks[context.category] || "решение актуальных задач в соответствующей области";
         }
         
-        function getUsageExample1(word, analysis) {
-            if (analysis.wordCategory === "profession") {
-                return `Профессия <strong>${word.toLowerCase()}а</strong> становится одной из наиболее востребованных в условиях технологической трансформации.`;
-            } else if (analysis.wordCategory === "feeling") {
-                return `Феномен <strong>${word.toLowerCase()}и</strong> был подробно описан в исследованиях взаимодействия человека и ИИ.`;
-            } else {
-                return `Концепция <strong>${word.toLowerCase()}и</strong> предлагает новый взгляд на решение актуальных проблем.`;
-            }
+        function getUsageExample1(word, context) {
+            const examples = {
+                robots: `Профессия <strong>${word.toLowerCase()}а</strong> становится одной из наиболее востребованных с распространением автономных роботизированных систем.`,
+                ai_emotions: `В исследовании человеко-машинного взаимодействия был выявлен феномен <strong>${word.toLowerCase()}и</strong> как типичная реакция на эмпатического ИИ.`,
+                climate: `С развитием технологий управления климатом профессия <strong>${word.toLowerCase()}а</strong> приобретает критическое значение для устойчивого развития городов.`,
+                tech_devices: `Клинические испытания нового <strong>${word.toLowerCase()}а</strong> показали его эффективность в терапии когнитивных расстройств.`,
+                society: `Конституционные эксперты обсуждают возможность реализации принципов <strong>${word.toLowerCase()}и</strong> в правовых системах будущего.`
+            };
+            
+            return examples[context.category] || `Термин <strong>${word}</strong> начинает использоваться в специализированной литературе для описания новых явлений.`;
         }
         
-        function getUsageExample2(word, analysis) {
-            if (analysis.wordCategory === "device") {
-                return `Современный <strong>${word.toLowerCase()}</strong> позволяет решать задачи, которые ранее считались невыполнимыми.`;
-            } else {
-                return `Термин <strong>${word.toLowerCase()}</strong> уже начал использоваться в специализированной литературе.`;
-            }
+        function getUsageExample2(word, context) {
+            return `Международная конференция была посвящена обсуждению перспектив развития <strong>${word.toLowerCase()}и</strong> в контексте технологического прогресса.`;
         }
         
-        function getUsageExample3(word, analysis) {
-            return `Внедрение понятия <strong>${word.toLowerCase()}и</strong> в образовательные программы поможет подготовить специалистов будущего.`;
+        function getUsageExample3(word, context) {
+            return `Внедрение понятия <strong>${word.toLowerCase()}и</strong> в образовательные программы поможет подготовить специалистов для работы с новыми технологиями.`;
         }
         
-        function getUsageExample4(word, analysis) {
-            return `Международная конференция была посвящена обсуждению перспектив развития <strong>${word.toLowerCase()}и</strong>.`;
+        function getUsageExample4(word, context) {
+            const examples = {
+                robots: `Компании-разработчики роботов ищут квалифицированных <strong>${word.toLowerCase()}ов</strong> для обучения своих систем сложным задачам.`,
+                ai_emotions: `Психологи разрабатывают методики работы с пациентами, испытывающими <strong>${word.toLowerCase()}ю</strong> при длительном взаимодействии с ИИ.`,
+                climate: `Городские администрации привлекают <strong>${word.toLowerCase()}ов</strong> для разработки систем управления микроклиматом в мегаполисах.`,
+                tech_devices: `Производители технологических устройств выпускают новые модели <strong>${word.toLowerCase()}ов</strong> с улучшенными характеристиками.`,
+                society: `Социологи изучают общественное восприятие концепции <strong>${word.toLowerCase()}и</strong> через опросы и фокус-группы.`
+            };
+            
+            return examples[context.category] || `Термин <strong>${word}</strong> представляет собой важный концептуальный инструмент для осмысления трансформации в соответствующей области.`;
         }
         
         // Функции для озвучивания текста
         function speakArticle() {
             if (!speechSynthesis) {
-                alert('Синтез речи не поддерживается вашим браузером');
+                alert('Синтез речи не поддерживается вашим браузера');
                 return;
             }
             
@@ -1037,12 +1157,12 @@
             const titleText = articleTitle.innerText;
             const fullText = titleText + ". " + articleText;
             
-            // Создаем объект utterance
+            // Создаем объект utterance Озвучка текста
             currentUtterance = new SpeechSynthesisUtterance(fullText);
             currentUtterance.lang = 'ru-RU';
-            currentUtterance.rate = 0.9; // Скорость речи
-            currentUtterance.pitch = 1; // Высота тона
-            currentUtterance.volume = 1; // Громкость
+            currentUtterance.rate = 2.5;
+            currentUtterance.pitch = 1.3;
+            currentUtterance.volume = 1;
             
             // События
             currentUtterance.onstart = function() {
@@ -1139,7 +1259,7 @@
         
         // Инициализация: показываем пример при загрузке
         window.addEventListener('load', function() {
-            definitionInput.value = "название профессии, связанной с управлением климатическими системами мегаполиса";
+            definitionInput.value = "должность человека который будет обучать роботов";
         });
     </script>
 </body>
