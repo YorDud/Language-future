@@ -767,7 +767,7 @@
                     
                     <div id="voiceStatus" class="voice-status">
                         <div class="pulse"></div>
-                        <span>Говорите сейчас... Я слушаю. Скажите "стоп" чтобы закончить.</span>
+                        <span>Говорите сейчас... Я слушаю. Чтобы остановить, нажмите кнопку "Голосовой ввод" еще раз.</span>
                     </div>
                 </div>
                 
@@ -820,7 +820,7 @@
                 
                 <div class="legalize-btn">
                     <button id="legalizeBtn" class="btn btn-success">
-                        <i class="fas fa-file-contract"></i> Больше информации о термине
+                        <i class="fas fa-file-contract"></i> Узнать больше о слове
                     </button>
                 </div>
                 
@@ -884,7 +884,6 @@
         let speechSynthesis = window.speechSynthesis;
         let isSpeaking = false;
         let currentUtterance = null;
-        let voiceResultText = "";
         
         // Проверяем поддержку Web Speech API (распознавание)
         function initSpeechRecognition() {
@@ -893,11 +892,8 @@
                 recognition = new SpeechRecognition();
                 recognition.lang = 'ru-RU';
                 recognition.interimResults = true; // Показываем промежуточные результаты
-                recognition.continuous = false; // Остановка после паузы
+                recognition.continuous = true; // Непрерывное распознавание
                 recognition.maxAlternatives = 1;
-                
-                // Сбрасываем состояние перед началом записи
-                voiceResultText = "";
                 
                 recognition.onstart = function() {
                     isListening = true;
@@ -906,11 +902,9 @@
                     voiceBtn.classList.remove('btn-secondary');
                     voiceBtn.classList.add('btn-danger');
                     definitionInput.placeholder = "Говорите сейчас...";
-                    voiceStatus.querySelector('span').textContent = "Говорите сейчас... Я слушаю. Скажите 'стоп' чтобы закончить.";
                 };
                 
                 recognition.onresult = function(event) {
-                    let interimTranscript = '';
                     let finalTranscript = '';
                     
                     for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -919,25 +913,25 @@
                         if (event.results[i].isFinal) {
                             // Финализированный текст
                             finalTranscript += transcript;
-                            voiceResultText += transcript + ' ';
-                        } else {
-                            // Промежуточный текст (показывается в реальном времени)
-                            interimTranscript += transcript;
                         }
                     }
                     
-                    // Обновляем поле ввода с уже распознанным текстом
-                    if (voiceResultText.trim()) {
-                        definitionInput.value = voiceResultText + (interimTranscript ? ' ' + interimTranscript : '');
+                    // Добавляем распознанный текст в поле ввода
+                    if (finalTranscript.trim()) {
+                        // Если поле пустое, просто устанавливаем текст
+                        // Если в поле уже есть текст, добавляем к нему
+                        const currentValue = definitionInput.value.trim();
+                        if (currentValue) {
+                            definitionInput.value = currentValue + ' ' + finalTranscript;
+                        } else {
+                            definitionInput.value = finalTranscript;
+                        }
                         
                         // Автоматически прокручиваем поле ввода к концу текста
                         definitionInput.scrollTop = definitionInput.scrollHeight;
-                    }
-                    
-                    // Если есть команда "стоп" - останавливаем распознавание
-                    const currentText = (voiceResultText + interimTranscript).toLowerCase();
-                    if (currentText.includes('стоп') || currentText.includes('хватит') || currentText.includes('остановись')) {
-                        recognition.stop();
+                        
+                        // Фокусируем на поле ввода
+                        definitionInput.focus();
                     }
                 };
                 
@@ -948,14 +942,6 @@
                     voiceBtn.classList.remove('btn-danger');
                     voiceBtn.classList.add('btn-secondary');
                     definitionInput.placeholder = "Опишите понятие, для которого нужно создать новое слово...";
-                    
-                    // Автоматически генерируем слово после голосового ввода, если есть текст
-                    if (voiceResultText.trim().length > 5) {
-                        // Небольшая задержка для удобства пользователя
-                        setTimeout(function() {
-                            generateNewWord();
-                        }, 800);
-                    }
                 };
                 
                 recognition.onerror = function(event) {
@@ -973,14 +959,12 @@
                         alert('Не удалось получить доступ к микрофону. Убедитесь, что микрофон подключен и разрешен для использования.');
                     } else if (event.error === 'network') {
                         alert('Ошибка сети при распознавании речи. Проверьте подключение к интернету.');
+                    } else if (event.error === 'no-speech') {
+                        // Это нормально, пользователь ничего не сказал
+                        console.log('Речь не обнаружена');
                     } else {
-                        alert('Произошла ошибка при распознавании речи. Пожалуйста, попробуйте еще раз.');
+                        console.log('Ошибка распознавания речи: ' + event.error);
                     }
-                };
-                
-                // Устанавливаем таймаут для автоматической остановки через 30 секунд
-                recognition.onspeechend = function() {
-                    // Автоматически останавливается после паузы в речи
                 };
             } else {
                 // Браузер не поддерживает распознавание речи
@@ -1460,8 +1444,8 @@
             // Создаем объект utterance Озвучка текста
             currentUtterance = new SpeechSynthesisUtterance(fullText);
             currentUtterance.lang = 'ru-RU';
-            currentUtterance.rate = 1.5; // Нормальная скорость для лучшей разборчивости
-            currentUtterance.pitch = 1.2;
+            currentUtterance.rate = 0.8; // МЕДЛЕННАЯ скорость для лучшего восприятия на телефоне
+            currentUtterance.pitch = 1.0;
             currentUtterance.volume = 1;
             
             // События
@@ -1531,10 +1515,9 @@
                 definitionInput.placeholder = "Опишите понятие, для которого нужно создать новое слово...";
             } else {
                 // Начинаем запись
-                // Сбрасываем предыдущий текст
-                voiceResultText = "";
-                
                 try {
+                    // Очищаем поле ввода перед началом записи
+                    definitionInput.value = '';
                     recognition.start();
                 } catch (error) {
                     console.error('Ошибка запуска распознавания речи:', error);
