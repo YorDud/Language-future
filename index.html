@@ -884,58 +884,119 @@
         let speechSynthesis = window.speechSynthesis;
         let isSpeaking = false;
         let currentUtterance = null;
+        let voiceResultText = "";
         
         // Проверяем поддержку Web Speech API (распознавание)
-        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            recognition = new SpeechRecognition();
-            recognition.lang = 'ru-RU';
-            recognition.interimResults = false;
-            recognition.continuous = false;
-            
-            recognition.onstart = function() {
-                isListening = true;
-                voiceStatus.classList.add('voice-active');
-                voiceBtn.innerHTML = '<i class="fas fa-microphone-slash"></i> Остановить запись';
-                voiceBtn.classList.remove('btn-secondary');
-                voiceBtn.classList.add('btn-danger');
-            };
-            
-            recognition.onresult = function(event) {
-                const transcript = event.results[0][0].transcript;
-                definitionInput.value = transcript;
+        function initSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.lang = 'ru-RU';
+                recognition.interimResults = true; // Показываем промежуточные результаты
+                recognition.continuous = false; // Остановка после паузы
+                recognition.maxAlternatives = 1;
                 
-                // Автоматически генерируем слово после голосового ввода
-                if (transcript.trim().length > 5) {
-                    setTimeout(generateNewWord, 500);
-                }
-            };
-            
-            recognition.onend = function() {
-                isListening = false;
-                voiceStatus.classList.remove('voice-active');
-                voiceBtn.innerHTML = '<i class="fas fa-microphone"></i> Голосовой ввод';
-                voiceBtn.classList.remove('btn-danger');
-                voiceBtn.classList.add('btn-secondary');
-            };
-            
-            recognition.onerror = function(event) {
-                console.error('Ошибка распознавания речи: ', event.error);
-                isListening = false;
-                voiceStatus.classList.remove('voice-active');
-                voiceBtn.innerHTML = '<i class="fas fa-microphone"></i> Голосовой ввод';
-                voiceBtn.classList.remove('btn-danger');
-                voiceBtn.classList.add('btn-secondary');
+                // Сбрасываем состояние перед началом записи
+                voiceResultText = "";
                 
-                if (event.error === 'not-allowed') {
-                    alert('Доступ к микрофону запрещен. Пожалуйста, разрешите использование микрофона в настройках браузера.');
-                }
-            };
-        } else {
-            voiceBtn.disabled = true;
-            voiceBtn.innerHTML = '<i class="fas fa-microphone-slash"></i> Голосовой ввод не поддерживается';
-            voiceBtn.title = 'Ваш браузер не поддерживает голосовой ввод';
+                recognition.onstart = function() {
+                    isListening = true;
+                    voiceStatus.classList.add('voice-active');
+                    voiceBtn.innerHTML = '<i class="fas fa-microphone-slash"></i> Остановить запись';
+                    voiceBtn.classList.remove('btn-secondary');
+                    voiceBtn.classList.add('btn-danger');
+                    definitionInput.placeholder = "Говорите сейчас...";
+                    voiceStatus.querySelector('span').textContent = "Говорите сейчас... Я слушаю. Скажите 'стоп' чтобы закончить.";
+                };
+                
+                recognition.onresult = function(event) {
+                    let interimTranscript = '';
+                    let finalTranscript = '';
+                    
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        const transcript = event.results[i][0].transcript;
+                        
+                        if (event.results[i].isFinal) {
+                            // Финализированный текст
+                            finalTranscript += transcript;
+                            voiceResultText += transcript + ' ';
+                        } else {
+                            // Промежуточный текст (показывается в реальном времени)
+                            interimTranscript += transcript;
+                        }
+                    }
+                    
+                    // Обновляем поле ввода с уже распознанным текстом
+                    if (voiceResultText.trim()) {
+                        definitionInput.value = voiceResultText + (interimTranscript ? ' ' + interimTranscript : '');
+                        
+                        // Автоматически прокручиваем поле ввода к концу текста
+                        definitionInput.scrollTop = definitionInput.scrollHeight;
+                    }
+                    
+                    // Если есть команда "стоп" - останавливаем распознавание
+                    const currentText = (voiceResultText + interimTranscript).toLowerCase();
+                    if (currentText.includes('стоп') || currentText.includes('хватит') || currentText.includes('остановись')) {
+                        recognition.stop();
+                    }
+                };
+                
+                recognition.onend = function() {
+                    isListening = false;
+                    voiceStatus.classList.remove('voice-active');
+                    voiceBtn.innerHTML = '<i class="fas fa-microphone"></i> Голосовой ввод';
+                    voiceBtn.classList.remove('btn-danger');
+                    voiceBtn.classList.add('btn-secondary');
+                    definitionInput.placeholder = "Опишите понятие, для которого нужно создать новое слово...";
+                    
+                    // Автоматически генерируем слово после голосового ввода, если есть текст
+                    if (voiceResultText.trim().length > 5) {
+                        // Небольшая задержка для удобства пользователя
+                        setTimeout(function() {
+                            generateNewWord();
+                        }, 800);
+                    }
+                };
+                
+                recognition.onerror = function(event) {
+                    console.error('Ошибка распознавания речи: ', event.error);
+                    isListening = false;
+                    voiceStatus.classList.remove('voice-active');
+                    voiceBtn.innerHTML = '<i class="fas fa-microphone"></i> Голосовой ввод';
+                    voiceBtn.classList.remove('btn-danger');
+                    voiceBtn.classList.add('btn-secondary');
+                    definitionInput.placeholder = "Опишите понятие, для которого нужно создать новое слово...";
+                    
+                    if (event.error === 'not-allowed') {
+                        alert('Доступ к микрофону запрещен. Пожалуйста, разрешите использование микрофона в настройках браузера.');
+                    } else if (event.error === 'audio-capture') {
+                        alert('Не удалось получить доступ к микрофону. Убедитесь, что микрофон подключен и разрешен для использования.');
+                    } else if (event.error === 'network') {
+                        alert('Ошибка сети при распознавании речи. Проверьте подключение к интернету.');
+                    } else {
+                        alert('Произошла ошибка при распознавании речи. Пожалуйста, попробуйте еще раз.');
+                    }
+                };
+                
+                // Устанавливаем таймаут для автоматической остановки через 30 секунд
+                recognition.onspeechend = function() {
+                    // Автоматически останавливается после паузы в речи
+                };
+            } else {
+                // Браузер не поддерживает распознавание речи
+                voiceBtn.disabled = true;
+                voiceBtn.innerHTML = '<i class="fas fa-microphone-slash"></i> Голосовой ввод не поддерживается';
+                voiceBtn.title = 'Ваш браузер не поддерживает голосовой ввод. Пожалуйста, используйте последние версии Chrome, Edge или Safari.';
+                
+                // Информационное сообщение для пользователя
+                voiceBtn.addEventListener('click', function() {
+                    alert('Голосовой ввод не поддерживается вашим браузером. Пожалуйста, используйте последние версии Chrome, Edge или Safari для доступа к этой функции.');
+                });
+            }
         }
+        
+        // Инициализируем распознавание речи при загрузке страницы
+        initSpeechRecognition();
         
         // Проверяем поддержку синтеза речи
         if (!speechSynthesis) {
@@ -1399,8 +1460,8 @@
             // Создаем объект utterance Озвучка текста
             currentUtterance = new SpeechSynthesisUtterance(fullText);
             currentUtterance.lang = 'ru-RU';
-            currentUtterance.rate = 2.5; // Нормальная скорость для лучшей разборчивости
-            currentUtterance.pitch = 1.3;
+            currentUtterance.rate = 1.5; // Нормальная скорость для лучшей разборчивости
+            currentUtterance.pitch = 1.2;
             currentUtterance.volume = 1;
             
             // События
@@ -1455,14 +1516,30 @@
         
         voiceBtn.addEventListener('click', function() {
             if (!recognition) {
-                alert('Голосовой ввод не поддерживается вашим браузером. Пожалуйста, используйте последние версии Chrome или Edge.');
+                alert('Голосовой ввод не поддерживается вашим браузером. Пожалуйста, используйте последние версии Chrome, Edge или Safari.');
                 return;
             }
             
             if (isListening) {
+                // Останавливаем запись
                 recognition.stop();
+                isListening = false;
+                voiceStatus.classList.remove('voice-active');
+                voiceBtn.innerHTML = '<i class="fas fa-microphone"></i> Голосовой ввод';
+                voiceBtn.classList.remove('btn-danger');
+                voiceBtn.classList.add('btn-secondary');
+                definitionInput.placeholder = "Опишите понятие, для которого нужно создать новое слово...";
             } else {
-                recognition.start();
+                // Начинаем запись
+                // Сбрасываем предыдущий текст
+                voiceResultText = "";
+                
+                try {
+                    recognition.start();
+                } catch (error) {
+                    console.error('Ошибка запуска распознавания речи:', error);
+                    alert('Не удалось начать запись. Пожалуйста, проверьте разрешения для микрофона и попробуйте еще раз.');
+                }
             }
         });
         
